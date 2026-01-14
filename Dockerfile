@@ -1,21 +1,29 @@
-# STEP 4.1: Base image (Python)
 FROM python:3.11-slim
 
-# STEP 4.2: Set working directory inside container
+# Set working directory
 WORKDIR /app
 
-# STEP 4.3: Copy requirements file
-COPY requirements.txt .
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libssl-dev \
+    && rm -rf /var/lib/apt/lists/*
 
-# STEP 4.4: Install Python packages
-RUN pip install --no-cache-dir -r requirements.txt && \
+# Set Flask environment variables
+ENV FLASK_APP=app.py
+ENV FLASK_RUN_HOST=0.0.0.0
+
+# Copy and install dependencies
+COPY requirements.txt .
+RUN pip install --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt && \
     python -m textblob.download_corpora
 
-# STEP 4.5: Copy application code
+# Copy application code
 COPY app.py .
 
-# STEP 4.6: Expose Flask port
+# Expose port
 EXPOSE 5000
 
-# STEP 4.7: Start Flask app
-CMD ["python", "app.py"]
+# Default command
+CMD ["flask", "run"]
