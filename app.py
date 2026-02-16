@@ -6,7 +6,7 @@ app = Flask(__name__)
 @app.route('/')
 def home():
     return """
-    <h2>Welcomejbjbo!</h2>
+    <h2>Welcome!</h2>
     <p>Send a POST request to /sentiment with JSON: {"text": "your text here"}</p>
     """
 
@@ -29,6 +29,7 @@ def sentiment():
 if __name__ == "__main__":
 
     app.run(debug=True)  # Runs on http://127.0.0.1:5001
+
 
 
 
